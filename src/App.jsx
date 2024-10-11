@@ -23,13 +23,11 @@ import Rent from './pages/Rent';
 import Idea from './pages/Idea';
 import Login from './pages/Login';
 import SummaryApi from './common';
-import { useDispatch } from 'react-redux';
-import { setUserDetails } from "./store/userSlice";
-import Context from './context/index';
 import SignUp from './pages/SignUp';
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoutes from './auth/ProtectedRoutes';
+import UnProtectedRoutes from './auth/UnProtectedRoutes';
 
 const App = () => {
   const screenWidth = window.innerWidth;
@@ -44,40 +42,16 @@ const App = () => {
   console.log("screenWidth", screenWidth); // screenWidth 1536
   console.log("screenHeight", screenHeight); // screenHeight 730
 */
-const dispatch = useDispatch();
-
-const fetchUserDetials = async()=> {
-  const dataResponse = await fetch(SummaryApi.current_user.url,{
-    method: SummaryApi.current_user.method,
-    credentials : 'include',
-  })
-  const dataApi = await dataResponse.json();
-  //console.log('data-user:', dataResponse);
-  if(dataApi.success) {
-    //dispatch({type: 'SET_USER_DETAILS', payload: dataApi.data});
-    dispatch(setUserDetails(dataApi.data));
-    //SummaryApi.current_uer.data = dataApi.data;
-
-  }
-}
-
-useEffect(()=> {
-  /**user Details */
-  fetchUserDetials();
-},[]);
 
   return (
     <div>
-      <Context.Provider value={{
-      fetchUserDetials, // user detail fetch
-    }}>
       <ToastContainer
       position="top-center"
       autoClose={2000}
       closeOnClick
       draggable={false}      
       />
-      <Router>
+      {/* <Router> */}
       {/* <SidebarNavMenu> */}
       {/* <SideBarNav> */}
       <SideBar>
@@ -95,18 +69,17 @@ useEffect(()=> {
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/file-manager" element={<FileManager />} />
           <Route path="/order" element={<Order />} />
-          <Route path="/saved" element={<Saved rows={rows} cols={cols} />} />
+          <Route path="/saved" element={<ProtectedRoutes><Saved rows={rows} cols={cols} /></ProtectedRoutes>} />
           <Route path="/settings" element={<Setting />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/login" element={<UnProtectedRoutes><Login /></UnProtectedRoutes>} />
+          <Route path="/sign-up" element={<UnProtectedRoutes><SignUp /></UnProtectedRoutes>} />
 
           <Route path="*" element={<> not found</>} />
         </Routes>
       </SideBar>
       {/* </SideBarNav> */}
         {/* </SidebarNavMenu> */}
-      </Router>
-      </Context.Provider>
+      {/* </Router> */}
     </div>
   )
 }

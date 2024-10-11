@@ -1,23 +1,22 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import SummaryApi from "../common";
+import { Link } from "react-router-dom";
 import loginIcons from "../assets/signin.gif";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import imageTobase64 from './../helpers/imageTobase64';
-import { toast } from 'react-toastify';
+import useAuthContext from "../context/AuthContext";
 
 const SignUp = () => {
 
   const [showPassword,setShowPassword] = useState(false);
     const [showConfirmPassword,setShowConfirmPassword] = useState(false);
     const [data, setData] = useState({
-        email: "",
-        password: "",
-        confirmPassword: "",
-        name: "",
-        profilePic: "",
+      name: "",  
+      email: "",
+      password: "",
+      password_confirmation: "",        
+      //profilePic: "",
     });
-    const navigate = useNavigate();
+    const {register, errors} = useAuthContext();
     const handelOnChange = (e) => {
         const { name, value } = e.target;
 
@@ -40,45 +39,12 @@ const SignUp = () => {
   }
   const handelSubmit = async (e) => {
       e.preventDefault();
-      //console.log("Login Data", data);
-      if(data.password === data.confirmPassword) {
+      if(data.password === data.password_confirmation) {
          // Add your code here to submit the form data
-      //console.log("Form Submitted Successfully");
-      const dataResponse = await fetch(SummaryApi.signUp.url,{
-        //targetAddressSpace: "public",
-        method: SummaryApi.signUp.method  ,
-        headers: {
-          'Content-Type': 'application/json',
-          //"Access-Control-Allow-Origin": "http://backad.localproductsnetwork.com",
-          //"Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify(data),
-      });
-
-      const dataApi = await dataResponse.json();
-      if(dataApi.success) {
-        //toast("Registration Successful!");
-        toast.success(dataApi.message);
-        navigate("/login");
-        setData({
-          email: "",
-          password: "",
-          confirmPassword: "",
-          name: "",
-          profilePic: "",
-        });
-        //history.push("/login");
-      }
-      if(dataApi.error) {
-        toast.error(dataApi.message);
-        //console.log("Error", dataApi.error);
-        //return;
-      }
-      //console.log("Data", dataApi);
+         register({...data});
       } else {
         alert("كلمة المرور غير متطابقة");
         console.log("Passwords do not match!");
-        //return;
       }
     }
 
@@ -159,15 +125,15 @@ const SignUp = () => {
             </div>
           </div>
           <div>
-            <label htmlFor="confirmPassword">تأكيد كلمة المرور: </label>
+            <label htmlFor="password_confirmation">تأكيد كلمة المرور: </label>
             <div className="bg-slate-100 p-2 flex">
               <input
                 type={showConfirmPassword ? "text" : "password" }
                 placeholder="أخل تأكيد كلمة المرور"
-                value={data.confirmPassword}
+                value={data.password_confirmation}
                 onChange={handelOnChange}
-                id="confirmPassword"
-                name="confirmPassword"
+                id="password_confirmation"
+                name="password_confirmation"
                 required
                 className="w-full h-full outline-none bg-transparent"
               />
