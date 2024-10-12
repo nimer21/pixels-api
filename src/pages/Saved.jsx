@@ -361,15 +361,16 @@ const sendPixelsToBackend = async (pixelData, token) => {
   const formData = new FormData();
   
   // Add the image
-  formData.append('img', data.img[0]); //image_url_or_base64_encoded_image
+  formData.append('img', pixelData.img[0]); //image_url_or_base64_encoded_image
 
   // Add other fields
-  formData.append('email', data.email);
-  formData.append('phone', data.phone);
-  formData.append('country', data.country);
-  formData.append('link', data.link);
-  formData.append('description', data.description);
+  formData.append('email', pixelData.email);
+  formData.append('phone', pixelData.phone);
+  formData.append('country', pixelData.country);
+  formData.append('link', pixelData.link);
+  formData.append('description', pixelData.description);
   formData.append('type', "#ff0");
+  formData.append('color', "#ff0");
 
   // Add each pixel value
   selectedPixels.forEach((pixel, index) => {
@@ -398,14 +399,15 @@ const sendPixelsToBackend = async (pixelData, token) => {
 }
      */
 
-    if (!responseRequest.ok) {
-      throw new Error('Failed to send pixel data to backend');
-    }
+    // if (!responseRequest.ok) {
+    //   throw new Error('Failed to send pixel data to backend');
+    // }
 
-    const result = await responseRequest.json();
-    console.log('Response from backend:', result); // resp.data.message =  "message": "a request has been sent to the admin , waiting for admin's approval"
+    //const result = await responseRequest.json();
+    console.log('Response from backend:', responseRequest); // resp.data.message =  "message": "a request has been sent to the admin , waiting for admin's approval"
+    //{data: {…}, status: 200, statusText: '', headers: AxiosHeaders, config: {…}, …}
 
-    return result;
+    //return result;
 
   } catch (error) {
     console.error('Error sending pixel data:', error);
@@ -698,7 +700,7 @@ if (loading) {
               width: `${pixelSize}px`,
               height: `${pixelSize}px`,
               backgroundColor: pixel.image ? "transparent" : pixel.color,
-              backgroundImage: pixel.image ? `url(https://pixelsback.localproductsnetwork.com/public/PixelsImages/${pixel.image})` : "none",
+              backgroundImage: pixel.partial_img ? `url(https://pixelsback.localproductsnetwork.com/public/PartialImages/${pixel.partial_img})` : "none",
               backgroundSize: pixel.backgroundSize || "cover",
               backgroundPosition: pixel.backgroundPosition || "center",
               transition:

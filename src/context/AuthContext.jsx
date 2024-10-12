@@ -122,6 +122,12 @@ export const AuthProvider = ({ children }) => {
       navigate("/login");
     } catch (error) {
       console.log("catch error:=> ", error);
+      if (error.response.status === 401) {
+        sessionStorage.removeItem("authTokenJWT");
+      sessionStorage.removeItem("user");
+      sessionStorage.clear();
+      navigate("/login");        
+      }
     }
   };
 

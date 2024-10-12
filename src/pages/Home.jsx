@@ -3,8 +3,6 @@ import "../components/PixelGrid/./PixelGrid.css";
 import { Button, Form, Modal } from "react-bootstrap";
 /********************************************************************************************************** */
 const Home = () => {
-  //const localStorageKey = "pixelGridImages";
-
   const fixedCols = 95; // Number of columns    77
   const fixedRows = 75; // Number of rows       65  => 5005
   const [pixelSize, setPixelSize] = useState(0);
@@ -14,7 +12,7 @@ const Home = () => {
     //JSON.parse(localStorage.getItem(localStorageKey)) ||
     Array(fixedRows * fixedCols).fill({ color: "#ccc", image: null });
   const [grid, setGrid] = useState(initialGrid);
-  const [loading, setLoading] = useState(true); // State to show loading status
+  const [loading, setLoading] = useState(true);
 
   const [showModalImage, setShowModalImage] = useState(false);
   const [showModalImageLG, setShowModalImageLG] = useState(false);
@@ -43,18 +41,12 @@ const Home = () => {
     const calculatePixelSize = () => {
       const screenWidth = window.innerWidth-45;
       const screenHeight = window.innerHeight-45;
-      //console.log("screenWidth=====", screenWidth);
-      //console.log("screenHeight=====", screenHeight);
 
       const calculatedPixelWidth = Math.floor(screenWidth / fixedCols);
       const calculatedPixelHeight = Math.floor(screenHeight / fixedRows);
 
       const size = Math.min(calculatedPixelWidth, calculatedPixelHeight);
-      //console.log("Size=====", size);
       setPixelSize(size);
-
-      /*const newGrid = Array(fixedCols * fixedRows).fill({ color: '#ccc', image: null });
-    setGrid(newGrid);*/
     };
 
     calculatePixelSize();
@@ -124,64 +116,27 @@ const apiResponse = [
   }
 ];
 
-//const gridSize = 7125; // Adjust this based on your grid's total size
-//const localStorageData = convertAPIResponseToIndexedArray(apiResponse, "#ccc", gridSize);
-//console.log(localStorageData);
-
 /***************************************************************************************** */
-  // Fetch data from the backend or initialize a new grid
+const fetchPixelData = async () => {
+  try {
+    const response = await fetch("https://pixelsback.localproductsnetwork.com/api/approved/pixels");
+    const data = await response.json();
+    const localStorageData = convertAPIResponseToIndexedArray(data);
+
+    setGrid(localStorageData);
+    setLoading(false);
+
+  } catch (error) {
+    console.error("Error fetching pixel data:", error);
+    setLoading(false);
+  }
+};
+//************************************************************************************/
+  // Fetch pixel data when the component mounts
   useEffect(() => {
-    const fetchPixelData = async () => {
-      try {
-        // Step 1: Fetch the data from the backend
-        const response = await fetch('https://pixelsback.localproductsnetwork.com/api/approved/pixels', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json', // Define the expected response type
-          },
-        });
-
-        // Step 2: Check if response is okay
-        if (!response.ok) {
-          throw new Error('Failed to fetch pixel data');
-        }
-        const data = await response.json();
-
-        // Step 3: Set pixel data or initialize if no data is returned
-        if (data && data.length > 0) {
-          //console.log("data.pixels ",data[0]['1545'].img);
-          //console.log("data.pixels ",data);
-         const localStorageData = convertAPIResponseToIndexedArray(data);
-         const approvedGrid = localStorageData || Array(fixedRows * fixedCols).fill({ color: "#ccc", image: null });
-          //console.log(approvedGrid);
-
-          setGrid(localStorageData); // Use the fetched pixel data
-          //console.log("data.pixels ",localStorageData); //
-        } else {
-          // Initialize a new grid with default values if no data is found
-          //const newGrid = initializeGrid(10, 10); // For example, 10x10 grid
-          const newGrid = Array(fixedRows * fixedCols).fill({ color: "#ccc", image: null }); // For example, 10x10 grid
-          setGrid(newGrid);
-          //console.log("data ",data[1].data); //
-        }
-
-        setLoading(false); // Data loaded
-      } catch (error) {
-        console.error('Error fetching pixel data:', error);
-
-        // If error occurs, initialize a new grid
-        //const newGrid = initializeGrid(10, 10);
-        const newGrid = Array(fixedRows * fixedCols).fill({ color: "#ccc", image: null });
-        setGrid(newGrid);
-        //console.error('Error fetching pixel data:',JSON.parse(localStorage.getItem(localStorageKey)));
-
-        setLoading(false); // Data loaded
-      }
-    };
-
     fetchPixelData();
-  }, []); // Empty dependency array ensures it runs once on component mount
-
+  }, []);
+//************************************************************************************/
   if (loading) {
     return <div className="flex justify-center">جاري التحميل للصفحة...</div>;
   }
@@ -307,8 +262,8 @@ const apiResponse = [
             style={{
               width: `${pixelSize}px`,
               height: `${pixelSize}px`,
-              backgroundColor: pixel.image ? "transparent" : pixel.color,
-              backgroundImage: pixel.image ? `url(https://pixelsback.localproductsnetwork.com/public/PartialImages/${pixel.partial_img})` : "none",
+              backgroundColor: pixel.partial_img ? "transparent" : pixel.color,
+              backgroundImage: pixel.partial_img ? `url(https://pixelsback.localproductsnetwork.com/public/PartialImages/${pixel.partial_img})` : "none",
               backgroundSize: pixel.backgroundSize || "cover",
               backgroundPosition: pixel.backgroundPosition || "center",
               transition:
