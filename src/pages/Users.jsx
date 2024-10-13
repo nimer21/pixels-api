@@ -9,7 +9,7 @@ const Users = () => {
   const fixedRows = 75;
   const [pixelSize, setPixelSize] = useState(0);
   const initialGrid = Array(fixedRows * fixedCols).fill({ color: '#ccc', image: null });
-  const [grid, setGrid] = useState(initialGrid);
+  const [grid, setGrid] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 //************************************************************************************/  
@@ -48,14 +48,14 @@ const Users = () => {
       // Place the pixel data at the corresponding index in the flat array
       flatArray[pixelIndex] = {
         image: pixelData.img || null,  // Use image from API or null if not provided
-        status : "Approved",
+        status : pixelData.status,
         email: pixelData.email,
         phone: pixelData.phone,
         country: pixelData.country,
         link: pixelData.link,
         description: pixelData.description || null,
         unit: pixelData.unit,
-        color: defaultColor,          // Default color (or modify if necessary)
+        color: pixelData.color,          // Default color (or modify if necessary)
         type: pixelData.type,
         partial_img: pixelData.partial_img || null
       };
@@ -125,7 +125,6 @@ const fetchPixelData = async () => {
 
     setGrid(localStorageData);
     setLoading(false);
-
   } catch (error) {
     console.error("Error fetching pixel data:", error);
     setLoading(false);
@@ -136,6 +135,11 @@ const fetchPixelData = async () => {
   useEffect(() => {
     fetchPixelData();
   }, []);
+
+  // Log the updated `grid` state after it's changed
+// useEffect(() => {
+//   console.log("Grid state updated:", grid);
+// }, [grid]);
 //************************************************************************************/
   if (loading) {
     return <div className="flex items-center justify-center">جاري تحميل المربعات &#128512; ...</div>;
@@ -173,14 +177,14 @@ unit: "8ad9266d-0212-486d-b689-3e635ad54c33"
             style={{
               width: `${pixelSize}px`,
               height: `${pixelSize}px`,
-              backgroundColor: pixel.partial_img ? 'transparent' : pixel.color,
+              backgroundColor: pixel.status === "pending" ? '#ff0' : "#ccc",
               backgroundImage: pixel.partial_img ? `url(https://pixelsback.localproductsnetwork.com/public/PartialImages/${pixel.partial_img})` : "none",
               //backgroundImage: pixel.partial_img ? `url(${pixel.partial_img})` : "none",
               backgroundSize: pixel.backgroundSize || 'cover',
               backgroundPosition: pixel.backgroundPosition || 'center',
               transition: 'background-size 0.3s ease, background-position 0.3s ease',
             }}
-            title={`مربع ${index}`} // Add the tooltip text here
+            title={`إعلان ${index}`} // Add the tooltip text here
             onDoubleClick={() => handlePixelClick(index)} // Upload image on double-click
           ></div>
         ))}

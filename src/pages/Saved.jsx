@@ -279,7 +279,7 @@ const sendPixelsToBackend = async (pixelData, token) => {
     //   throw new Error('Failed to send pixel data to backend');
     // }
 
-    console.log('Response from backend:', responseRequest); // resp.data.message =  "message": "a request has been sent to the admin , waiting for admin's approval"
+    //console.log('Response from backend:', responseRequest); // resp.data.message =  "message": "a request has been sent to the admin , waiting for admin's approval"
     //{data: {…}, status: 200, statusText: '', headers: AxiosHeaders, config: {…}, …}
 
     //return result;
