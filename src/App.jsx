@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react'
 import "./App.css";
 import SideBar from "./components/Sidebar/SideBar";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 
 import Dashboard from "./pages/Dashboard";
 import Users from "./pages/Users";
@@ -36,12 +35,6 @@ const App = () => {
 
   const rows = Math.floor(screenHeight / pixelSize);
   const cols = Math.floor(screenWidth / pixelSize);
-/*
-  console.log("rows", rows); // rows 73
-  console.log("cols", cols); // cols 153
-  console.log("screenWidth", screenWidth); // screenWidth 1536
-  console.log("screenHeight", screenHeight); // screenHeight 730
-*/
 
   return (
     <div>
@@ -60,21 +53,20 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<Dashboard />} />
           
-          <Route path="/users" element={<ProtectedRoutes><Users rows={rows} cols={cols}/></ProtectedRoutes>} />
-          
-          {/* <Route path="/users" element={<Users rows={33} cols={67}/>} /> */}
+          <Route path="/users" element={<ProtectedRoutes><Users/></ProtectedRoutes>} />
           <Route path="/messages" element={<Messages />} />
           <Route path="/rent" element={<Rent />} />
           <Route path="/idea" element={<Idea />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/file-manager" element={<FileManager />} />
           <Route path="/order" element={<Order />} />
-          <Route path="/saved" element={<ProtectedRoutes><Saved rows={rows} cols={cols} /></ProtectedRoutes>} />
+          <Route path="/saved" element={<ProtectedRoutes><Saved /></ProtectedRoutes>} />
           <Route path="/settings" element={<Setting />} />
           <Route path="/login" element={<UnProtectedRoutes><Login /></UnProtectedRoutes>} />
           <Route path="/sign-up" element={<UnProtectedRoutes><SignUp /></UnProtectedRoutes>} />
 
-          <Route path="*" element={<> not found</>} />
+          {/* <Route path="*" element={<> not found</>} /> */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </SideBar>
       {/* </SideBarNav> */}

@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import "../components/PixelGrid/PixelGrid.css";
-import axios from "../api/axios";
 import { useNavigate } from 'react-router-dom';
 //************************************************************************************/
 
-const Users = ({ rows, cols }) => {
+const Users = () => {
 
-  const fixedCols = 95; // Number of columns    77
-  const fixedRows = 75; // Number of rows       65  => 5005
+  const fixedCols = 95;
+  const fixedRows = 75;
   const [pixelSize, setPixelSize] = useState(0);
-  const initialGrid = //fetchPixelData() || 
-                      Array(fixedRows * fixedCols).fill({ color: '#ccc', image: null });
+  const initialGrid = Array(fixedRows * fixedCols).fill({ color: '#ccc', image: null });
   const [grid, setGrid] = useState(initialGrid);
-  const [loading, setLoading] = useState(true); // State to show loading status
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 //************************************************************************************/  
   useEffect(() => {
@@ -94,7 +92,7 @@ const handlePixelClick = async (index) => {
   input.click(); // Trigger the file input dialog    
 };
 
-    /***************************************************************************************** */
+/***************************************************************************************** */
     // Function to send pixel data to the backend
   const sendPixelData = async (index, file) => {
     const formData = new FormData();

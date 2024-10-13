@@ -5,38 +5,18 @@ import countries from "./../helpers/countries";
 import axios from "../api/axios";
 import SummaryApi from "../common";
 //************************************************************************************ */
-const Saved = ({ rows, cols }) => {
+const Saved = () => {
   const token = sessionStorage.getItem('authTokenJWT');
-  //const localStorageKey = "pixelGridImages";
 
-
-  const fixedCols = 95; // Number of columns    77
-  const fixedRows = 75; // Number of rows       65  => 5005
+  const fixedCols = 95;
+  const fixedRows = 75;
   const [pixelSize, setPixelSize] = useState(0);
-  // Load grid from local storage or initialize it
-  const initialGrid =
-    //JSON.parse(localStorage.getItem(localStorageKey)) ||
-    Array(fixedRows * fixedCols).fill({ color: "#ccc", image: null });
-    const [loading, setLoading] = useState(true); // State to show loading status
+  const initialGrid = Array(fixedRows * fixedCols).fill({ color: "#ccc", image: null });
+    const [loading, setLoading] = useState(true);
   //************************************************************************************
-  const createGrid = () => {
-    let grid = [];
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < cols; j++) {
-        grid.push(
-          <div key={`${i}-${j}`} className="pixel">
-            {/* <img src="https://picsum.photos/400/300?random=21" alt="login icon" className="" /> */}
-          </div>
-        );
-      }
-    }
-    return grid;
-  };
-  //************************************************************************************ */
-  // Initialize the grid with an array of objects, each representing a pixel
-  const [grid, setGrid] = useState(initialGrid); // default color for each pixel
+  const [grid, setGrid] = useState(initialGrid);
 
-  const [gridTemp, setGridTemp] = useState(initialGrid); // default color for each pixel
+  const [gridTemp, setGridTemp] = useState(initialGrid);
 
   const [selectedGrid, setSelectedGrid] = useState([]);
 
@@ -59,7 +39,6 @@ const Saved = ({ rows, cols }) => {
     description: "",
     type: "",
   });
-
     //************************************************************************************
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -92,29 +71,17 @@ const Saved = ({ rows, cols }) => {
       reader.readAsDataURL(file);
     }
   };
-  //************************************************************************************ */
-  /*useEffect(() => {
-    //console.log("Selected Pixels changed:", selectedPixels);
-    // Perform any actions that depend on the updated selectedPixels here
-  }, [selectedPixels]);*/
-  //************************************************************************************ */
-
+  //************************************************************************************/
   useEffect(() => {
     const calculatePixelSize = () => {
       const screenWidth = window.innerWidth-45;
       const screenHeight = window.innerHeight-45;
-      //console.log("screenWidth=====", screenWidth);
-      //console.log("screenHeight=====", screenHeight);
 
       const calculatedPixelWidth = Math.floor(screenWidth / fixedCols);
       const calculatedPixelHeight = Math.floor(screenHeight / fixedRows);
 
       const size = Math.min(calculatedPixelWidth, calculatedPixelHeight);
-      //console.log("Size=====", size);
       setPixelSize(size);
-
-      /*const newGrid = Array(fixedCols * fixedRows).fill({ color: '#ccc', image: null });
-    setGrid(newGrid);*/
     };
 
     calculatePixelSize();
@@ -123,40 +90,12 @@ const Saved = ({ rows, cols }) => {
     return () => window.removeEventListener("resize", calculatePixelSize);
   }, [fixedCols, fixedRows]);
   //************************************************************************************/
-  // Function to handle pixel click
   const handlePixelClick = (index) => {
     if (selectedPixels.includes(index)) {
       setSelectedPixels(selectedPixels.filter((i) => i !== index));
     } else {
-      //if(selectedPixels[index].color==="#ccc")
       setSelectedPixels([...selectedPixels, index]);
     }
-
-    /**
-     * Example Fix with Functional Update:
-      If you need to add or remove pixels from selectedPixels based on the current state,
-      you can use the functional form of setState:
-     */
-    /*
-    const handlePixelClick = (index) => {
-      setSelectedPixels((prevSelectedPixels) => {
-        if (prevSelectedPixels.includes(index)) {
-          return prevSelectedPixels.filter(i => i !== index);
-        } else {
-          return [...prevSelectedPixels, index];
-        }
-      });
-    };
-    */
-    //************************************************************************************/
-
-    /*
-    const newGrid = [...grid];
-    newGrid[index] = {
-      ...newGrid[index],
-      color: newGrid[index].color === '#ccc' ? '#000' : '#ccc' // Toggle color
-    };
-    setGrid(newGrid);*/
 
     const newGrid = [...gridTemp];
     newGrid[index] = {
@@ -164,61 +103,7 @@ const Saved = ({ rows, cols }) => {
       color: newGrid[index].color === "#ccc" ? "#000" : "#ccc", // Toggle color
     };
     setGridTemp(newGrid);
-
-    //console.log("selectedPixels index:", selectedPixels); // Log the index of the selected pixel
-    //console.log("Selected grid color:", grid[index].color); // Log the index of the selected pixel
-    //console.log("Selected gridTemp color:", gridTemp[index].color); // Log the index of the selected pixel
-
-    /*
-    // assigning the list to temp variable
-    const temp = [...selectedGrid];
-    // removing the element using splice
-    newGrid.forEach((nGrid, index) => nGrid.color === '#000' ? temp.push(index) : temp.splice(index))
-    // updating the list
-    setSelectedGrid(temp);
-    // logging the list after removing the element
-    console.log("list after Updating (Adding/Removing) the element =", temp);
-    */
   };
-  //************************************************************************************ */
-  // Function to transform the selected pixel array into the backend's format
-const transformPixelsToBackendFormat = (pixels, userId = 5) => {
-  const formattedData = [];
-
-  pixels?.forEach((pixel, index) => {
-    // Build the pixel data object in the required format
-    const pixelData = {
-      [pixel]: {
-        //id: null, // Set to null or provide actual ID if available
-        //user_id: userId.toString(),  // Convert user_id to string if needed
-        pixel_number: pixel.toString(),  // Use index as pixel number
-        img: data.img || null,  // Handle if image is missing
-        //reservation_date: null,  // Default to null
-        //created_at: new Date().toISOString(),  // Set current timestamp
-        //updated_at: new Date().toISOString(),  // Set current timestamp
-        //status: pixel.status || "pending",  // Default to "pending" if status missing
-        email: data.email || null,  // Default to null if email missing
-        phone: data.phone || null,  // Default to null if phone missing
-        country: data.country || null,  // Default to null if country missing
-        link: data.link || null,  // Default to null if link missing
-        description: data.description || null,  // Default to null if description missing
-        //unit: pixel.unit || null,  // Default to null if unit missing
-        //color: pixel.color || "#ccc",  // Default to "#ccc" if color missing
-        type: pixel.type || null,  // Default to null if type missing
-        //partial_img: pixel.partial_img || null  // Default to null if partial_img missing
-      }
-    };
-
-    // Push the transformed pixel data to the array
-    formattedData.push(pixelData);
-  });
-
-  return formattedData;
-};
-
-// Example usage: Transform the selected pixels array into the backend format
-//const transformedData = transformPixelsToBackendFormat(selectedPixels);
-//console.log(JSON.stringify(transformedData, null, 2));  // Pretty-print the result
   //************************************************************************************ */
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -264,17 +149,9 @@ const transformPixelsToBackendFormat = (pixels, userId = 5) => {
     });
 
     //console.log("selectedPixels",selectedPixels); // (4) [11, 10, 105, 106]
-    //console.log("newGrid2",newGrid2);
-    //console.log("data",data);
     setGrid(newGrid2);
     setGridTemp(newGrid2);
-    //localStorage.setItem(localStorageKey, JSON.stringify(grid));
 
-    // Example usage: Transform the selected pixels array into the backend format
-    //const transformedData = transformPixelsToBackendFormat(selectedPixels);
-    //console.log(JSON.stringify(transformedData, null, 2));  // Pretty-print the result
-
-    // Here you can send the selectedIndexes to your server for reservation
     sendPixelsToBackend(data, token);
 
     //setData(null);
@@ -354,7 +231,6 @@ const transformPixelsToBackendFormat = (pixels, userId = 5) => {
   };
     
   /***************************************************************************************** */
-  // Function to send the selected pixels to the backend
 const sendPixelsToBackend = async (pixelData, token) => {
   try {
 
@@ -403,7 +279,6 @@ const sendPixelsToBackend = async (pixelData, token) => {
     //   throw new Error('Failed to send pixel data to backend');
     // }
 
-    //const result = await responseRequest.json();
     console.log('Response from backend:', responseRequest); // resp.data.message =  "message": "a request has been sent to the admin , waiting for admin's approval"
     //{data: {…}, status: 200, statusText: '', headers: AxiosHeaders, config: {…}, …}
 
@@ -442,26 +317,21 @@ const sendPixelsToBackend = async (pixelData, token) => {
 useEffect(() => {
   const fetchPixelData = async () => {
     try {
-      // Step 1: Fetch the data from the backend
       const response = await fetch('https://pixelsback.localproductsnetwork.com/api/approved/pixels', {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json', // Define the expected response type
+          'Content-Type': 'application/json',
         },
       });
 
-      // Step 2: Check if response is okay
       if (!response.ok) {
         throw new Error('Failed to fetch pixel data');
       }
       const data = await response.json();
 
-      // Step 3: Set pixel data or initialize if no data is returned
       if (data && data.length > 0) {
-        //console.log("data.pixels ",data[0]['1545'].img);
        const localStorageData = convertAPIResponseToIndexedArray(data);
        const approvedGrid = localStorageData || Array(fixedRows * fixedCols).fill({ color: "#ccc", image: null });
-        //console.log(approvedGrid);
 
         setGrid(localStorageData); // Use the fetched pixel data
         setGridTemp(localStorageData); // Use the fetched pixel data
@@ -480,18 +350,16 @@ useEffect(() => {
       console.error('Error fetching pixel data:', error);
 
       // If error occurs, initialize a new grid
-      //const newGrid = initializeGrid(10, 10);
       const newGrid = Array(fixedRows * fixedCols).fill({ color: "#ccc", image: null });
       setGrid(newGrid);
       setGridTemp (newGrid);
-      //console.error('Error fetching pixel data:',JSON.parse(localStorage.getItem(localStorageKey)));
 
-      setLoading(false); // Data loaded
+      setLoading(false);
     }
   };
 
   fetchPixelData();
-}, []); // Empty dependency array ensures it runs once on component mount
+}, []);
 
   //************************************************************************************ */
 
@@ -499,25 +367,9 @@ if (loading) {
   return <div className="flex items-center justify-center">جاري تحميل المربعات &#128512; ...</div>;
 }
 //************************************************************************************
-/*
-  useEffect(() => {
-    //localStorage.setItem(localStorageKey, JSON.stringify(grid));
-    fetchData();
-    sendPixelsToBackend(formattedData, "12|H6xcxYvgpCOsZVD2iJ7fYKVc3M1G8L5a91qkDuGrcffd3127");
-  }, [grid]);*/
-  //************************************************************************************ */
-
   return (
     <>
       <div className="flex mb-2 mr-5">
-        {/* <Button variant="danger" onClick={() => setShowModal(true)}
-      className="btn btn-danger flex items-center content-center text-center hover:scale-105 mr-1 mb-1 
-      duration-300 py-1 px-8 rounded-full text-wrap
-      relative z-10 focus:outline-none focus:ring-4 focus:ring-indigo-600
-      focus:ring-opacity-50 transition-all">
-      إرسال المربعات
-      </Button> */}
-
         <Button variant="primary" onClick={handleOpenModal}>
           إرسال المربعات المحجوزة
         </Button>
@@ -610,8 +462,6 @@ if (loading) {
               <Form.Control
                 type="text"
                 placeholder="رابط الموقع"
-                //onChange={handleUrlChange}
-                //value={data.url}
                 name="link"
                 value={data.link}
                 onChange={handleOnChange}
@@ -630,7 +480,6 @@ if (loading) {
                 placeholder="أدخل نبذة عن المنتج / الشركة"
                 value={data.description}
                 name="description"
-                //onChange={handleDescChange}
                 onChange={handleOnChange}
                 required
                 //resize= "none"
@@ -643,7 +492,6 @@ if (loading) {
               <Form.Control
                 type="email"
                 placeholder="البريد الإلكتروني"
-                //onChange={handleUrlChange}
                 //value={data.url}
                 name="email"
                 value={data.email}
@@ -708,10 +556,6 @@ if (loading) {
             }}
             title={`إعلان ${index}`} // Add the tooltip text here
             onClick={() => handlePixelClick(index)}
-            // onContextMenu={(e) => {
-            //   e.preventDefault();
-            //   handlePixelReset(index);
-            // }}
           ></div>
         ))}
       </div>
