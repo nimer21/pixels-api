@@ -32,6 +32,7 @@ const Saved = () => {
   const [data, setData] = useState({
     pixel: [],
     img: [],
+    advCoName:"",
     email: "",
     phone:"",
     country: "",
@@ -108,12 +109,12 @@ const Saved = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const { pixel, img, email,phone, country, link, description } = data;
+    const { pixel, img,advCoName, email,phone, country, link, description } = data;
 
     if (
       // !selectedSquares ||
       !img.length ||
-      //!advCoName ||
+      !advCoName ||
       !email ||
       !phone ||
       !country ||
@@ -140,7 +141,7 @@ const Saved = () => {
         link: data.link,
         description: data.description,
         type: data.type,
-        //advCoName: data.advCoName,
+        advCoName: data.advCoName,
         color: "#ff0",
         //description: desc,
         //name: user?.name,
@@ -159,6 +160,7 @@ const Saved = () => {
     setData({
       pixel: [],
       img: [],
+      advCoName:"",
       email:"",
       phone:"",
       country: "",
@@ -214,7 +216,8 @@ const Saved = () => {
       // Place the pixel data at the corresponding index in the flat array
       flatArray[pixelIndex] = {
         image: pixelData.img || null,  // Use image from API or null if not provided
-        status : "Approved",
+        advCoName: pixelData.company_name, 
+        status : pixelData.status,
         email: pixelData.email,
         phone: pixelData.phone,
         country: pixelData.country,
@@ -238,6 +241,7 @@ const sendPixelsToBackend = async (pixelData, token) => {
   
   // Add the image
   formData.append('img', pixelData.img[0]); //image_url_or_base64_encoded_image
+  formData.append('advCoName', pixelData.advCoName); //image_url_or_base64_encoded_image
 
   // Add other fields
   formData.append('email', pixelData.email);
@@ -428,9 +432,9 @@ if (loading) {
                 placeholder="إسم الشركة / المنتج"
                 //onChange={handleUrlChange}
                 //value={data.url}
-                //name="advCoName"
-                //value={data.advCoName}
-                //onChange={handleOnChange}
+                name="advCoName"
+                value={data.advCoName}
+                onChange={handleOnChange}
                 required
                 autoFocus
                 className="p-2 bg-slate-100 border rounded"

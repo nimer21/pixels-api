@@ -72,7 +72,8 @@ const convertAPIResponseToIndexedArray = (apiResponse, defaultColor = "#ccc", gr
     // Place the pixel data at the corresponding index in the flat array
     flatArray[pixelIndex] = {
       image: pixelData.img || null,  // Use image from API or null if not provided
-      status : "Approved",
+      advCoName: pixelData.company_name,
+      status : pixelData.status,
       email: pixelData.email,
       phone: pixelData.phone,
       country: pixelData.country,
@@ -122,6 +123,7 @@ const fetchPixelData = async () => {
     const response = await fetch("https://pixelsback.localproductsnetwork.com/api/approved/pixels");
     const data = await response.json();
     const localStorageData = convertAPIResponseToIndexedArray(data);
+    console.log("localStorageData:", localStorageData);
 
     setGrid(localStorageData);
     setLoading(false);
@@ -157,7 +159,7 @@ const fetchPixelData = async () => {
         <Modal.Body className="flex justify-between">
           <div className="w-9/12">
             <p className="uppercase tracking-wide text-lg text-indigo-500 font-extrabold text-center">
-              {grid[selectedPixel]?.email}
+              {grid[selectedPixel]?.advCoName}
             </p>
             <Form.Label></Form.Label>
             <Form.Control
@@ -222,7 +224,7 @@ const fetchPixelData = async () => {
             <Form.Control
               type="text"
               disabled={true}
-              name="advCoName"
+              name="email"
               value={grid[selectedPixel]?.email}
               autoFocus
               className="text-primary border rounded font-extrabold text-center mb-4"
