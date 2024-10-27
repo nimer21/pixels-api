@@ -144,7 +144,7 @@ export const AuthProvider = ({ children }) => {
         //console.log(storedUser); // Access user properties
         setUser(storedUser);
       } else {
-        console.log('No user found in localStorage');
+        //console.log('No user found in localStorage');
       }
 
       //getUser();

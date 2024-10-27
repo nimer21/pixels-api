@@ -123,7 +123,7 @@ const fetchPixelData = async () => {
     const response = await fetch("https://pixelsback.localproductsnetwork.com/api/approved/pixels");
     const data = await response.json();
     const localStorageData = convertAPIResponseToIndexedArray(data);
-    console.log("localStorageData:", localStorageData);
+    //console.log("localStorageData:", localStorageData);
 
     setGrid(localStorageData);
     setLoading(false);
@@ -158,10 +158,20 @@ const fetchPixelData = async () => {
         </Modal.Header>
         <Modal.Body className="flex justify-between">
           <div className="w-9/12">
-            <p className="uppercase tracking-wide text-lg text-indigo-500 font-extrabold text-center">
-              {grid[selectedPixel]?.advCoName}
+            <p className="uppercase tracking-wide text-lg text-indigo-500 font-extrabold text-center">              
+              <Form.Label className=""></Form.Label>
+            <Form.Control
+              type="text"
+              disabled={true}
+              name="advCoName"
+              value={grid[selectedPixel]?.advCoName}
+              autoFocus
+              className="text-primary border rounded font-extrabold text-center mb-4"
+            >
+            </Form.Control>
             </p>
             <Form.Label></Form.Label>
+            
             <Form.Control
               as="textarea"
               rows={6}
@@ -184,7 +194,7 @@ const fetchPixelData = async () => {
           {selectedPixel ? (
             <img
               src={"https://pixelsback.localproductsnetwork.com/public/PixelsImages/"+grid[selectedPixel]?.image}
-              className="rounded-md object-cover"
+              className="rounded-md object-contain w-full h-full"
               alt="Selected"
               style={{ width: "250px", height: "350px", marginRight:"9px" }}
             />
