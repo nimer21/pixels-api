@@ -10,7 +10,7 @@ const Dashboard = () => {
     try {
       const response = await fetch("https://pixelsback.localproductsnetwork.com/api/contents");
       const data = await response.json();
-      console.log("data:", data);
+      //console.log("data:", data);
   
       setContentData(data);
       setLoading(false);
@@ -19,7 +19,7 @@ const Dashboard = () => {
       tempDiv.innerHTML = responseWithoutHtml;
       const cleanText = tempDiv.textContent || "";
       setContentDataDes(cleanText);
-      console.log("responseWithoutHtml:", contentDataDes);
+      //console.log("responseWithoutHtml:", contentDataDes);
   
     } catch (error) {
       console.error("Error fetching Content Data data:", error);
