@@ -370,7 +370,7 @@ function refreshPage(){
         })}
 
                     {/* {user?.is_admin */}
-                    {user?.email ==="Lana@gmail.com" && ( 
+                    {(user?.email ==="Lana@gmail.com"|| user?.email === "AnotherEmail@gmail.com") && ( 
                     <NavLink
                     to="/users"
                     //key={index}
