@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 const Analytics = () => {
   const [contentData, setContentData] = useState();
+  const [contentDataDes, setContentDataDes] = useState();
   const [loading, setLoading] = useState(true);
 
 
@@ -9,10 +10,16 @@ const Analytics = () => {
     try {
       const response = await fetch("https://pixelsback.localproductsnetwork.com/api/contents");
       const data = await response.json();
-      //console.log("data:", data);
+      console.log("data:", data);
   
       setContentData(data);
       setLoading(false);
+      const responseWithoutHtml = data[2]?.description;
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = responseWithoutHtml;
+      const cleanText = tempDiv.textContent || "";
+      setContentDataDes(cleanText);
+      console.log("responseWithoutHtml:", contentDataDes);
   
     } catch (error) {
       console.error("Error fetching Content Data data:", error);
@@ -44,7 +51,7 @@ const Analytics = () => {
           {contentData[2]?.key}
           </div>          
             <div className="mt-2 text-slate-500 text-justify">
-            {contentData[2]?.description}
+            {contentDataDes}
             </div>            
         </div>
       </div>
