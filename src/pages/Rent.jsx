@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
+import DOMPurify from "dompurify";
+import parse from 'html-react-parser';
 
 const Rent = () => {
+  
   const [contentData, setContentData] = useState();
   const [contentDataDes, setContentDataDes] = useState();
   const [loading, setLoading] = useState(true);
@@ -11,15 +14,13 @@ const Rent = () => {
       const response = await fetch("https://pixelsback.localproductsnetwork.com/api/contents");
       const data = await response.json();
       //console.log("data:", data);
+
+      // Sanitize and parse the HTML content
+      const sanitizedContent = DOMPurify.sanitize(data[4]?.description);
   
       setContentData(data);
       setLoading(false);
-      const responseWithoutHtml = data[4]?.description;
-      const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = responseWithoutHtml;
-      const cleanText = tempDiv.textContent || "";
-      setContentDataDes(cleanText);
-      //console.log("responseWithoutHtml:", contentDataDes);
+      setContentDataDes(sanitizedContent);
   
     } catch (error) {
       console.error("Error fetching Content Data data:", error);
@@ -49,9 +50,10 @@ const Rent = () => {
         <div className="p-8">
           <div className="uppercase tracking-wide text-lg text-indigo-500 font-extrabold text-center">
           {contentData[4]?.key}
+
           </div>          
             <div className="mt-2 text-slate-500 text-justify">
-            {contentDataDes}
+            {parse(contentDataDes)}
             </div>            
         </div>
       </div>

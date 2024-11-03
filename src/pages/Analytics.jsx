@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import DOMPurify from "dompurify";
+import parse from 'html-react-parser';
 
 const Analytics = () => {
   const [contentData, setContentData] = useState();
@@ -11,15 +13,11 @@ const Analytics = () => {
       const response = await fetch("https://pixelsback.localproductsnetwork.com/api/contents");
       const data = await response.json();
       //console.log("data:", data);
+      const sanitizedContent = DOMPurify.sanitize(data[2]?.description);
   
       setContentData(data);
       setLoading(false);
-      const responseWithoutHtml = data[2]?.description;
-      const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = responseWithoutHtml;
-      const cleanText = tempDiv.textContent || "";
-      setContentDataDes(cleanText);
-      //console.log("responseWithoutHtml:", contentDataDes);
+      setContentDataDes(sanitizedContent);
   
     } catch (error) {
       console.error("Error fetching Content Data data:", error);
@@ -51,7 +49,7 @@ const Analytics = () => {
           {contentData[2]?.key}
           </div>          
             <div className="mt-2 text-slate-500 text-justify">
-            {contentDataDes}
+            {parse(contentDataDes)}
             </div>            
         </div>
       </div>

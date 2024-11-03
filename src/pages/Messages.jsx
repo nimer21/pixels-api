@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
+import DOMPurify from "dompurify";
+import parse from 'html-react-parser';
 
 const Messages = () => {
   const [contentData, setContentData] = useState();
+  const [contentDataDes, setContentDataDes] = useState();
   const [loading, setLoading] = useState(true);
 
 
@@ -10,9 +13,12 @@ const Messages = () => {
       const response = await fetch("https://pixelsback.localproductsnetwork.com/api/contents");
       const data = await response.json();
       //console.log("data:", data);
+
+      const sanitizedContent = DOMPurify.sanitize(data[1]?.description);
   
       setContentData(data);
       setLoading(false);
+      setContentDataDes(sanitizedContent);
   
     } catch (error) {
       console.error("Error fetching Content Data data:", error);
@@ -44,7 +50,7 @@ const Messages = () => {
           {contentData[1]?.key}
           </div>
           <p className="mt-2 text-slate-500 text-justify">
-          {contentData[1]?.description}
+          {parse(contentDataDes)}
           </p>          
         </div>
       </div>

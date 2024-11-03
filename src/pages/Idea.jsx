@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
+import DOMPurify from "dompurify";
+import parse from 'html-react-parser';
 const Idea = () => {
 
   const [contentData, setContentData] = useState();
   const [loading, setLoading] = useState(true);
+  const [contentDataDes, setContentDataDes] = useState();
 
 
   const fetchContentData = async () => {
@@ -10,9 +13,12 @@ const Idea = () => {
       const response = await fetch("https://pixelsback.localproductsnetwork.com/api/contents");
       const data = await response.json();
       //console.log("data:", data);
+
+      const sanitizedContent = DOMPurify.sanitize(data[0]?.description);
   
       setContentData(data);
       setLoading(false);
+      setContentDataDes(sanitizedContent);
   
     } catch (error) {
       console.error("Error fetching Content Data data:", error);
@@ -45,7 +51,7 @@ const Idea = () => {
           </div>
           <p className="mt-2 text-slate-500 text-justify">
             <p className="inline-block mt-1 text-lg leading-tight font-medium text-black">
-            {contentData[0].description}
+            {parse(contentDataDes)}
             </p>
           </p>
         </div>
